@@ -53,7 +53,6 @@ class MaileonClient implements MaileonClientInterface
                     'content'  => [
                         'subject'   => $subject,
                         'body_html' => [$contents],
-                        'body_text' => strip_tags($contents),
                     ],
                 ]
             )
