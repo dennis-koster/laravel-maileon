@@ -23,7 +23,7 @@
         "ext-json": "*",
         "bensampo/laravel-enum": "^3.4",
         "guzzlehttp/psr7": "^1.8",
-        "laravel/framework": "^8.36.2",
+        "laravel/framework": "^8.0",
         "php-http/discovery": "^1.14",
         "psr/http-client": "^1.0",
         "psr/http-message": "^1.0"
