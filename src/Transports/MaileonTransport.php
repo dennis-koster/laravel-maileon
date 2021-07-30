@@ -12,9 +12,8 @@ class MaileonTransport extends Transport
 {
     protected MaileonClientInterface $maileonClient;
 
-    public function __construct(
-        MaileonClientInterface $maileonClient
-    ) {
+    public function __construct(MaileonClientInterface $maileonClient)
+    {
         $this->maileonClient = $maileonClient;
     }
 
