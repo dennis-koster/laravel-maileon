@@ -24,6 +24,10 @@
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <directory>src/Providers</directory>
+            <directory>src/Enums</directory>
+        </exclude>
         <report>
             <clover outputFile="build/logs/clover.xml"/>
         </report>
@@ -31,5 +35,8 @@
     <php>
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
         <env name="APP_DEBUG" value="true"/>
+        <env name="MAILEON_API_URL" value="https://api.maileon.com/1.0"/>
+        <env name="MAILEON_API_KEY" value="some-secret-key"/>
+        <env name="MAILEON_TRANSACTIONAL_CONTACT_EVENT" value="API_Transactional"/>
     </php>
 </phpunit>
