@@ -22,5 +22,4 @@ class ContactPermissionsEnum extends Enum
     public const DOUBLE_OPT_IN      = 4;
     public const DOUBLE_OPT_IN_PLUS = 5;
     public const OTHER              = 6;
-
 }
