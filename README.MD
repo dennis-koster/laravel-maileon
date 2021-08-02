@@ -40,7 +40,7 @@ We need to take a couple of steps in the Maileon interface to set everything up.
 
 ### 1. Creating the contact event
 After logging in, go to "Lists & Contacts" in the top menu.
-Then click "Contact events" in the left menu, and the click the button "Create a new contact event".
+Then click "Contact events" in the left menu, and then click the button "Create a new contact event".
 
 Use the following settings:
 ```
