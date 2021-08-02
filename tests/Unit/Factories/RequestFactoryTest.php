@@ -84,7 +84,7 @@ class RequestFactoryTest extends AbstractUnitTest
     /**
      * @test
      */
-    public function it_makes_an_uri_for_a_get_request(): void
+    public function it_makes_an_uri_for_a_get_request_with_params(): void
     {
         /** @var RequestMethodsEnum|MockInterface $requestMethod */
         $requestMethod = Mockery::mock(RequestMethodsEnum::class)
@@ -99,6 +99,26 @@ class RequestFactoryTest extends AbstractUnitTest
         $result = $this->requestFactory->makeUri('/foo/bar/com', $requestMethod, ['foo' => 'bar']);
 
         static::assertSame('https://foo.bar/com/foo/bar/com?foo=bar', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function it_makes_an_uri_for_a_get_request_without_params(): void
+    {
+        /** @var RequestMethodsEnum|MockInterface $requestMethod */
+        $requestMethod = Mockery::mock(RequestMethodsEnum::class)
+            ->shouldReceive('isNot')
+            ->once()
+            ->withArgs(function (RequestMethodsEnum $enum) {
+                return $enum->is(RequestMethodsEnum::GET());
+            })
+            ->andReturnFalse()
+            ->getMock();
+
+        $result = $this->requestFactory->makeUri('/foo/bar/com', $requestMethod);
+
+        static::assertSame('https://foo.bar/com/foo/bar/com', $result);
     }
 
     /**
