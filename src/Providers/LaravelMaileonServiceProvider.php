@@ -14,6 +14,8 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use Psr\Http\Client\ClientInterface;
+use Swis\Http\Fixture\Client;
+use Swis\Http\Fixture\ResponseBuilder;
 
 class LaravelMaileonServiceProvider extends ServiceProvider
 {

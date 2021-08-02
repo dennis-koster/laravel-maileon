@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace DennisKoster\LaravelMaileon\Tests\Integration;
 
 use DennisKoster\LaravelMaileon\Providers\LaravelMaileonServiceProvider;
+use DennisKoster\LaravelMaileon\Tests\mocks\HttpClientMock;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase;
-use Swis\Http\Fixture\Client;
 
 abstract class AbstractIntegrationTest extends TestCase
 {
@@ -27,6 +27,6 @@ abstract class AbstractIntegrationTest extends TestCase
      */
     protected function defineEnvironment($app): void
     {
-        $app['config']->set('laravel-maileon.http-client', Client::class);
+        $app['config']->set('laravel-maileon.http-client', HttpClientMock::class);
     }
 }
