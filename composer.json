@@ -53,5 +53,9 @@
         "psr-4": {
             "DennisKoster\\LaravelMaileon\\Tests\\": "tests"
         }
+    },
+    "scripts": {
+        "coverage": "vendor/bin/phpunit",
+        "test": "vendor/bin/phpunit --no-coverage"
     }
 }
