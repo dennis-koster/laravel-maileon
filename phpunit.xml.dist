@@ -14,9 +14,6 @@
          colors="true"
 >
     <testsuites>
-        <testsuite name="Integration">
-            <directory suffix="Test.php">./tests/Integration</directory>
-        </testsuite>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
@@ -27,6 +24,9 @@
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <report>
+            <clover outputFile="build/logs/clover.xml"/>
+        </report>
     </coverage>
     <php>
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
