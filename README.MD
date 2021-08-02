@@ -1,5 +1,5 @@
 # Laravel Maileon
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/dennis-koster/laravel-maileon/run-tests?label=tests)](https://img.shields.io/github/workflow/status/dennis-koster/laravel-maileon/actions?query=workflow%3Arun-tests+branch%3Amaster)
+[![Coverage Status](https://coveralls.io/repos/github/denniskoster/laravel-maileon/badge.svg?branch=master)](https://coveralls.io/github/denniskoster/laravel-maileon?branch=master)
 
 
 This package adds a custom mail driver for Maileon to Laravel.
