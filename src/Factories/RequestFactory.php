@@ -28,11 +28,6 @@ class RequestFactory implements RequestFactoryInterface
         $this->authorize($maileonConfiguration);
     }
 
-    public function authorize(MaileonConfiguration $maileonConfiguration): void
-    {
-        $this->defaultHeaders['Authorization'] = 'Basic ' . base64_encode($maileonConfiguration->getApiKey());
-    }
-
     public function make(
         string $uri,
         RequestMethodsEnum $method,
@@ -45,6 +40,11 @@ class RequestFactory implements RequestFactoryInterface
             $this->addDefaultHeaders($headers),
             $method->is(RequestMethodsEnum::GET()) ? null : json_encode($data),
         );
+    }
+
+    public function authorize(MaileonConfiguration $maileonConfiguration): void
+    {
+        $this->defaultHeaders['Authorization'] = 'Basic ' . base64_encode($maileonConfiguration->getApiKey());
     }
 
     /**
