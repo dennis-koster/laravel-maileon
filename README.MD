@@ -1,4 +1,5 @@
 # Laravel Maileon
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/denniskoster/laravel-maileon/Tests?label=tests)](https://github.com/denniskoster/laravel-maileon/actions?query=workflow%3ATests+branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/denniskoster/laravel-maileon/badge.svg?branch=master)](https://coveralls.io/github/denniskoster/laravel-maileon?branch=master)
 
 
