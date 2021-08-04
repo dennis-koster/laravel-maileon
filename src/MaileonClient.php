@@ -47,7 +47,7 @@ class MaileonClient implements MaileonClientInterface
                     'import'   => [
                         'contact' => [
                             'email'      => $recipientEmail,
-                            'permission' => ContactPermissionsEnum::NONE,
+                            'permission' => ContactPermissionsEnum::OTHER,
                         ],
                     ],
                     'content'  => [

@@ -38,7 +38,7 @@ class MaileonClientTest extends AbstractUnitTest
                         'import'   => [
                             'contact' => [
                                 'email'      => 'john.doe@example.com',
-                                'permission' => 1,
+                                'permission' => 6,
                             ],
                         ],
                         'content'  => [
