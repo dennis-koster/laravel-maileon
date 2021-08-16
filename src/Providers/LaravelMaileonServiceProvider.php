@@ -46,7 +46,7 @@ class LaravelMaileonServiceProvider extends ServiceProvider
                 $config->get('laravel-maileon.contact-event'),
                 $config->get('laravel-maileon.http-client'),
                 $config->get('laravel-maileon.logger'),
-                $config->get('laravel-maileon.enable-logging'),
+                (boolean) $config->get('laravel-maileon.enable-logging'),
             );
         });
 
