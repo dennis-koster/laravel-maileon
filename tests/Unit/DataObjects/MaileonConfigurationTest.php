@@ -28,7 +28,7 @@ class MaileonConfigurationTest extends AbstractUnitTest
         static::assertSame('API_Transactional', $configuration->getContactEvent());
         static::assertNull($configuration->getHttpClient());
         static::assertNull($configuration->getLogger());
-        static::assertFalse($configuration->debugMode());
+        static::assertFalse($configuration->logRequests());
     }
 
     /**
@@ -65,7 +65,7 @@ class MaileonConfigurationTest extends AbstractUnitTest
     /**
      * @test
      */
-    public function it_sets_debug_mode_to_true(): void
+    public function it_sets_log_requests_to_true(): void
     {
         $configuration = new MaileonConfiguration(
             'https://api-url.com',
@@ -76,6 +76,6 @@ class MaileonConfigurationTest extends AbstractUnitTest
             true
         );
 
-        static::assertTrue($configuration->debugMode());
+        static::assertTrue($configuration->logRequests());
     }
 }

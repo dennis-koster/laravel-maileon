@@ -11,7 +11,7 @@ class MaileonConfiguration
     protected string $contactEvent;
     protected ?string $httpClient;
     protected ?string $logger;
-    protected bool $debugMode;
+    protected bool $logRequests;
 
     public function __construct(
         string $apiUrl,
@@ -19,14 +19,14 @@ class MaileonConfiguration
         string $contactEvent,
         ?string $httpClient,
         ?string $logger = null,
-        bool $debugMode = false
+        bool $logRequests = false
     ) {
         $this->apiUrl       = $apiUrl;
         $this->apiKey       = $apiKey;
         $this->contactEvent = $contactEvent;
         $this->httpClient   = $httpClient;
         $this->logger       = $logger;
-        $this->debugMode    = $debugMode;
+        $this->logRequests  = $logRequests;
     }
 
     public function getApiUrl(): string
@@ -54,8 +54,8 @@ class MaileonConfiguration
         return $this->logger;
     }
 
-    public function debugMode(): bool
+    public function logRequests(): bool
     {
-        return $this->debugMode;
+        return $this->logRequests;
     }
 }
