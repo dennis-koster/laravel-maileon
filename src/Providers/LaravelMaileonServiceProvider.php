@@ -11,9 +11,11 @@ use DennisKoster\LaravelMaileon\MaileonClient;
 use DennisKoster\LaravelMaileon\Factories\RequestFactory;
 use Http\Discovery\Psr18ClientDiscovery;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use Psr\Http\Client\ClientInterface;
+use Psr\Log\LoggerInterface;
 
 class LaravelMaileonServiceProvider extends ServiceProvider
 {
@@ -43,6 +45,7 @@ class LaravelMaileonServiceProvider extends ServiceProvider
                 $config->get('laravel-maileon.api-key'),
                 $config->get('laravel-maileon.contact-event'),
                 $config->get('laravel-maileon.http-client'),
+                $config->get('laravel-maileon.logger'),
             );
         });
 
@@ -86,6 +89,22 @@ class LaravelMaileonServiceProvider extends ServiceProvider
         }
 
         return Psr18ClientDiscovery::find();
+    }
+
+    protected function getLogger(): ?LoggerInterface
+    {
+        /** @var MaileonConfiguration $config */
+        $config = $this->app->make(MaileonConfiguration::class);
+
+        if ($config->getLogger()) {
+            return $this->app->make($config->getLogger());
+        }
+
+        try {
+            return $this->app->make(LoggerInterface::class);
+        } catch (BindingResolutionException $exception) {
+            return null;
+        }
     }
 
     protected function setMaileonTransport(): self
