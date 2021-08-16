@@ -73,7 +73,8 @@ class LaravelMaileonServiceProvider extends ServiceProvider
             return new MaileonClient(
                 $this->getHttpClient(),
                 $container->make(RequestFactoryInterface::class),
-                $container->make(MaileonConfiguration::class)
+                $container->make(MaileonConfiguration::class),
+                $this->getLogger()
             );
         });
 
