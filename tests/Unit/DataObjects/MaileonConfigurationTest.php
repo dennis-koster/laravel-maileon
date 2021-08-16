@@ -28,7 +28,7 @@ class MaileonConfigurationTest extends AbstractUnitTest
         static::assertSame('API_Transactional', $configuration->getContactEvent());
         static::assertNull($configuration->getHttpClient());
         static::assertNull($configuration->getLogger());
-        static::assertFalse($configuration->logRequests());
+        static::assertFalse($configuration->enableLogging());
     }
 
     /**
@@ -76,6 +76,6 @@ class MaileonConfigurationTest extends AbstractUnitTest
             true
         );
 
-        static::assertTrue($configuration->logRequests());
+        static::assertTrue($configuration->enableLogging());
     }
 }

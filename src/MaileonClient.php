@@ -65,7 +65,7 @@ class MaileonClient implements MaileonClientInterface
             )
         );
 
-        if ($this->maileonConfiguration->logRequests() && $this->logger) {
+        if ($this->maileonConfiguration->enableLogging() && $this->logger) {
             $this->logger->debug('Sending transactional mail request to Maileon.', [
                 'requestBody' => $requestBody,
                 'response'    => $response,

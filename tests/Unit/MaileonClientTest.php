@@ -25,7 +25,7 @@ class MaileonClientTest extends AbstractUnitTest
         $requestFactory = Mockery::mock(RequestFactoryInterface::class);
         $configuration  = Mockery::mock(MaileonConfiguration::class, [
             'getContactEvent' => 'API_Transactional',
-            'logRequests'     => false,
+            'enableLogging'   => false,
         ]);
         $request        = Mockery::mock(RequestInterface::class);
 
@@ -79,7 +79,7 @@ class MaileonClientTest extends AbstractUnitTest
         $requestFactory = Mockery::mock(RequestFactoryInterface::class);
         $configuration  = Mockery::mock(MaileonConfiguration::class, [
             'getContactEvent' => 'API_Transactional',
-            'logRequests'     => true,
+            'enableLogging'   => true,
         ]);
         $request        = Mockery::mock(RequestInterface::class);
 
