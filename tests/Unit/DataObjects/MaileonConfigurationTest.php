@@ -7,6 +7,7 @@ namespace DennisKoster\LaravelMaileon\Tests\Unit\DataObjects;
 use DennisKoster\LaravelMaileon\DataObjects\MaileonConfiguration;
 use DennisKoster\LaravelMaileon\Tests\Unit\AbstractUnitTest;
 use Psr\Http\Client\ClientInterface;
+use Psr\Log\LoggerInterface;
 
 class MaileonConfigurationTest extends AbstractUnitTest
 {
@@ -26,6 +27,8 @@ class MaileonConfigurationTest extends AbstractUnitTest
         static::assertSame('some-secret-api-key', $configuration->getApiKey());
         static::assertSame('API_Transactional', $configuration->getContactEvent());
         static::assertNull($configuration->getHttpClient());
+        static::assertNull($configuration->getLogger());
+        static::assertFalse($configuration->enableLogging());
     }
 
     /**
@@ -37,9 +40,42 @@ class MaileonConfigurationTest extends AbstractUnitTest
             'https://api-url.com',
             'some-secret-api-key',
             'API_Transactional',
-            ClientInterface::class
+            ClientInterface::class,
         );
 
         static::assertSame(ClientInterface::class, $configuration->getHttpClient());
+    }
+
+    /**
+     * @test
+     */
+    public function it_sets_the_logger_fqn(): void
+    {
+        $configuration = new MaileonConfiguration(
+            'https://api-url.com',
+            'some-secret-api-key',
+            'API_Transactional',
+            ClientInterface::class,
+            LoggerInterface::class,
+        );
+
+        static::assertSame(LoggerInterface::class, $configuration->getLogger());
+    }
+
+    /**
+     * @test
+     */
+    public function it_sets_log_requests_to_true(): void
+    {
+        $configuration = new MaileonConfiguration(
+            'https://api-url.com',
+            'some-secret-api-key',
+            'API_Transactional',
+            null,
+            null,
+            true
+        );
+
+        static::assertTrue($configuration->enableLogging());
     }
 }

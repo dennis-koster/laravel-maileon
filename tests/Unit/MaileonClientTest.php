@@ -12,6 +12,7 @@ use Mockery;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class MaileonClientTest extends AbstractUnitTest
 {
@@ -24,6 +25,7 @@ class MaileonClientTest extends AbstractUnitTest
         $requestFactory = Mockery::mock(RequestFactoryInterface::class);
         $configuration  = Mockery::mock(MaileonConfiguration::class, [
             'getContactEvent' => 'API_Transactional',
+            'enableLogging'   => false,
         ]);
         $request        = Mockery::mock(RequestInterface::class);
 
@@ -59,6 +61,70 @@ class MaileonClientTest extends AbstractUnitTest
             $httpClient,
             $requestFactory,
             $configuration
+        );
+
+        $maileonClient->sendEmail(
+            'john.doe@example.com',
+            'Test email',
+            'This is a test email.'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_requests_when_debug_mode_is_set_to_true_and_a_logger_is_provided(): void
+    {
+        $httpClient     = Mockery::mock(ClientInterface::class);
+        $requestFactory = Mockery::mock(RequestFactoryInterface::class);
+        $configuration  = Mockery::mock(MaileonConfiguration::class, [
+            'getContactEvent' => 'API_Transactional',
+            'enableLogging'   => true,
+        ]);
+        $request        = Mockery::mock(RequestInterface::class);
+
+        $requestFactory
+            ->shouldReceive('make')
+            ->once()
+            ->andReturn($request);
+
+        $response = Mockery::mock(ResponseInterface::class);
+
+        $httpClient
+            ->shouldReceive('sendRequest')
+            ->once()
+            ->with($request)
+            ->andReturn($response);
+
+        /** @var LoggerInterface $logger */
+        $logger = Mockery::mock(LoggerInterface::class)
+            ->shouldReceive('debug')
+            ->once()
+            ->with('Sending transactional mail request to Maileon.', [
+                'requestBody' => [
+                    'typeName' => 'API_Transactional',
+                    'import'   => [
+                        'contact' => [
+                            'email'      => 'john.doe@example.com',
+                            'permission' => 6,
+                        ],
+                    ],
+                    'content'  => [
+                        'subject'   => 'Test email',
+                        'body_html' => [
+                            'This is a test email.',
+                        ],
+                    ],
+                ],
+                'response'    => $response,
+            ])
+            ->getMock();
+
+        $maileonClient = new MaileonClient(
+            $httpClient,
+            $requestFactory,
+            $configuration,
+            $logger
         );
 
         $maileonClient->sendEmail(
