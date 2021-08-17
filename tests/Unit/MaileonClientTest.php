@@ -12,6 +12,8 @@ use Mockery;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerInterface;
 
 class MaileonClientTest extends AbstractUnitTest
@@ -81,14 +83,59 @@ class MaileonClientTest extends AbstractUnitTest
             'getContactEvent' => 'API_Transactional',
             'enableLogging'   => true,
         ]);
-        $request        = Mockery::mock(RequestInterface::class);
+
+        $requestBody = <<<JSON
+{
+  "typeName": "API_Transactional",
+  "import": {
+    "contact": {
+      "email": "john.doe@example.com",
+      "permission": 6
+    }
+  },
+  "content": {
+    "subject": "Test email",
+    "body_html": [
+      "This is a test email."
+    ]
+  }
+}
+JSON;
+
+        $request = Mockery::mock(RequestInterface::class, [
+            'getUri'     => Mockery::mock(UriInterface::class, [
+                '__toString' => 'https://api.maileon.com/1.0/transactions',
+            ]),
+            'getMethod'  => 'POST',
+            'getHeaders' => [
+                'Host'          => ['api.maileon.com'],
+                'Content-Type'  => ['application/json'],
+                'Authorization' => ['Basic SecretApiKey'],
+            ],
+            'getBody'    => Mockery::mock(StreamInterface::class, [
+                '__toString' => $requestBody,
+            ]),
+        ])
+            ->shouldReceive('hasHeader')
+            ->once()
+            ->with('Authorization')
+            ->andReturnTrue()
+            ->getMock();
 
         $requestFactory
             ->shouldReceive('make')
             ->once()
             ->andReturn($request);
 
-        $response = Mockery::mock(ResponseInterface::class);
+        $response = Mockery::mock(ResponseInterface::class, [
+            'getStatusCode' => 200,
+            'getHeaders'    => [
+                'Content-Type' => ['application/json'],
+            ],
+            'getBody'       => Mockery::mock(StreamInterface::class, [
+                '__toString' => '{}',
+            ]),
+        ]);
 
         $httpClient
             ->shouldReceive('sendRequest')
@@ -100,23 +147,27 @@ class MaileonClientTest extends AbstractUnitTest
         $logger = Mockery::mock(LoggerInterface::class)
             ->shouldReceive('debug')
             ->once()
+            ->withArgs(function (string $message, array $context) {
+                dump($context);
+            })
             ->with('Sending transactional mail request to Maileon.', [
-                'requestBody' => [
-                    'typeName' => 'API_Transactional',
-                    'import'   => [
-                        'contact' => [
-                            'email'      => 'john.doe@example.com',
-                            'permission' => 6,
-                        ],
+                'request'  => [
+                    'uri'     => 'https://api.maileon.com/1.0/transactions',
+                    'method'  => 'POST',
+                    'headers' => [
+                        'Host'          => ['api.maileon.com'],
+                        'Content-Type'  => ['application/json'],
+                        'Authorization' => ['******'],
                     ],
-                    'content'  => [
-                        'subject'   => 'Test email',
-                        'body_html' => [
-                            'This is a test email.',
-                        ],
+                    'body'    => $requestBody,
+                ],
+                'response' => [
+                    'status'  => 200,
+                    'body'    => '{}',
+                    'headers' => [
+                        'Content-Type' => ['application/json'],
                     ],
                 ],
-                'response'    => $response,
             ])
             ->getMock();
 
