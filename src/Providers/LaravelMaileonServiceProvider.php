@@ -9,10 +9,12 @@ use DennisKoster\LaravelMaileon\Contracts\MaileonClientInterface;
 use DennisKoster\LaravelMaileon\DataObjects\MaileonConfiguration;
 use DennisKoster\LaravelMaileon\MaileonClient;
 use DennisKoster\LaravelMaileon\Factories\RequestFactory;
+use DennisKoster\LaravelMaileon\Transports\MaileonTransport;
 use Http\Discovery\Psr18ClientDiscovery;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -30,9 +32,7 @@ class LaravelMaileonServiceProvider extends ServiceProvider
 
         $this->registerMaileonConfiguration()
             ->registerRequestFactory()
-            ->registerMaileonClient()
-            ->registerCustomMailServiceProvider()
-            ->setMaileonTransport();
+            ->registerMaileonClient();
     }
 
     protected function registerMaileonConfiguration(): self
@@ -56,13 +56,6 @@ class LaravelMaileonServiceProvider extends ServiceProvider
     protected function registerRequestFactory(): self
     {
         $this->app->singleton(RequestFactoryInterface::class, RequestFactory::class);
-
-        return $this;
-    }
-
-    protected function registerCustomMailServiceProvider(): self
-    {
-        $this->app->register(MaileonMailServiceProvider::class);
 
         return $this;
     }
@@ -109,11 +102,13 @@ class LaravelMaileonServiceProvider extends ServiceProvider
         }
     }
 
-    protected function setMaileonTransport(): self
+    protected function registerMaileonTransport(): self
     {
-        $config = $this->app->make(Config::class);
-
-        $config->set('mail.mailers.maileon.transport', 'maileon');
+        Mail::extend('maileon', function (Container $container) {
+            return new MaileonTransport(
+                $container->make(MaileonClientInterface::class),
+            );
+        });
 
         return $this;
     }
@@ -125,5 +120,7 @@ class LaravelMaileonServiceProvider extends ServiceProvider
             . 'config' . DIRECTORY_SEPARATOR
             . 'laravel-maileon.php' => config_path('laravel-maileon.php'),
         ]);
+
+        $this->registerMaileonTransport();
     }
 }

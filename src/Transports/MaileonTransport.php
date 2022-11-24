@@ -5,32 +5,33 @@ declare(strict_types=1);
 namespace DennisKoster\LaravelMaileon\Transports;
 
 use DennisKoster\LaravelMaileon\Contracts\MaileonClientInterface;
-use Illuminate\Mail\Transport\Transport;
-use Swift_Mime_SimpleMessage;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mime\MessageConverter;
 
-class MaileonTransport extends Transport
+class MaileonTransport extends AbstractTransport
 {
-    protected MaileonClientInterface $maileonClient;
-
-    public function __construct(MaileonClientInterface $maileonClient)
-    {
-        $this->maileonClient = $maileonClient;
+    public function __construct(
+        protected MaileonClientInterface $maileonClient,
+    ) {
+        parent::__construct();
     }
 
-    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null): int
+    protected function doSend(SentMessage $message): void
     {
-        $this->beforeSendPerformed($message);
+        $email = MessageConverter::toEmail($message->getOriginalMessage());
 
-        foreach ($message->getTo() as $address => $display) {
+        foreach ($email->getTo() as $recipient) {
             $this->maileonClient->sendEmail(
-                $address,
-                $message->getSubject(),
-                $message->getBody(),
+                $recipient->getAddress(),
+                $email->getSubject(),
+                $email->getHtmlBody(),
             );
         }
+    }
 
-        $this->sendPerformed($message);
-
-        return $this->numberOfRecipients($message);
+    public function __toString(): string
+    {
+        return 'maileon';
     }
 }
