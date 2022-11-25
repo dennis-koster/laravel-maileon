@@ -1,0 +1,7 @@
+FROM php:8.0-fpm-alpine
+
+WORKDIR /var/www/html
+
+COPY composer.json phpunit.xml.dist /var/www/html/
+
+RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer

@@ -9,8 +9,8 @@ This package adds a custom mail driver for Maileon to Laravel.
 Some configuration in the Maileon user interface is required.
 
 ## Requirements
-* [laravel/laravel:^8.0](https://github.com/laravel/laravel)
-* [bensampo/laravel-enum:^3.4](https://github.com/BenSampo/laravel-enum)
+* [laravel/laravel:^8.0 || ^.0](https://github.com/laravel/laravel)
+* [bensampo/laravel-enum:^6.1.0](https://github.com/BenSampo/laravel-enum)
 * [guzzlehttp/psr7:^1.8](https://github.com/guzzle/psr7)
 * [php-http/discovery:^1.14](https://github.com/php-http/discovery)
 * [psr/http-client:^1.0](https://github.com/php-fig/http-client)

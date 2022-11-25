@@ -9,7 +9,7 @@ use DennisKoster\LaravelMaileon\Tests\Unit\AbstractUnitTest;
 use DennisKoster\LaravelMaileon\Transports\MaileonTransport;
 use Mockery;
 use Mockery\MockInterface;
-use Swift_Mime_SimpleMessage;
+use Symfony\Component\Mime\Email;
 
 class MaileonTransportTest extends AbstractUnitTest
 {
@@ -25,7 +25,7 @@ class MaileonTransportTest extends AbstractUnitTest
             ->with(
                 'john.doe@example.com',
                 'Test email',
-                'This is a test'
+                '<p>This is a test</p>'
             )
             ->getMock()
             ->shouldReceive('sendEmail')
@@ -33,40 +33,28 @@ class MaileonTransportTest extends AbstractUnitTest
             ->with(
                 'jane.doe@example.com',
                 'Test email',
-                'This is a test'
+                '<p>This is a test</p>'
             )
             ->getMock();
 
-        /** @var Swift_Mime_SimpleMessage|MockInterface $swiftMessage */
-        $swiftMessage = Mockery::mock(Swift_Mime_SimpleMessage::class)
-            ->shouldReceive('getTo')
-            ->twice()
-            ->andReturn([
-                'john.doe@example.com' => 'John Doe',
-                'jane.doe@example.com' => 'Jane Doe',
-            ])
-            ->getMock()
-            ->shouldReceive('getSubject')
-            ->twice()
-            ->andReturn('Test email')
-            ->getMock()
-            ->shouldReceive('getBody')
-            ->twice()
-            ->andReturn('This is a test')
-            ->getMock()
-            ->shouldReceive('getCc')
-            ->once()
-            ->andReturn([])
-            ->getMock()
-            ->shouldReceive('getBcc')
-            ->once()
-            ->andReturn([])
-            ->getMock();
+        $mail = (new Email())
+            ->html('<p>This is a test</p>')
+            ->subject('Test email')
+            ->from('sender@example.com')
+            ->to('john.doe@example.com', 'jane.doe@example.com');
 
         $transport = new MaileonTransport($maileonClient);
 
-        $result = $transport->send($swiftMessage);
+        $transport->send($mail);
+    }
 
-        static::assertSame(2, $result);
+    /**
+     * @test
+     */
+    public function it_returns_the_transport_identifier(): void
+    {
+        $transport = new MaileonTransport(Mockery::mock(MaileonClientInterface::class));
+
+        static::assertSame('maileon', (string) $transport);
     }
 }
