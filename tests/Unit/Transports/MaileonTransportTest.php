@@ -47,4 +47,14 @@ class MaileonTransportTest extends AbstractUnitTest
 
         $transport->send($mail);
     }
+
+    /**
+     * @test
+     */
+    public function it_returns_the_transport_identifier(): void
+    {
+        $transport = new MaileonTransport(Mockery::mock(MaileonClientInterface::class));
+
+        static::assertSame('maileon', (string) $transport);
+    }
 }
