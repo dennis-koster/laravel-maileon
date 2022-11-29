@@ -104,9 +104,9 @@ class LaravelMaileonServiceProvider extends ServiceProvider
 
     protected function registerMaileonTransport(): self
     {
-        Mail::extend('maileon', function (Container $container) {
+        Mail::extend('maileon', function () {
             return new MaileonTransport(
-                $container->make(MaileonClientInterface::class),
+                $this->app->make(MaileonClientInterface::class),
             );
         });
 
